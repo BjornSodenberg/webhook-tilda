@@ -19,10 +19,15 @@ app.use(bodyParser.json());
 app.get("/webhook", async (req, res) => {
   res.status(200).send("Webhook – ok");
   console.log("Webhook – ok");
-})
+});
 
 app.post("/webhook", async (req, res) => {
   const orderData = req.body;
+
+  // Проверка на данные { test: "test" }
+  if (orderData.test === "test") {
+    return res.status(200).send("Test data received");
+  }
 
   const transactionItem = {
     count: orderData.payment.amount,
@@ -54,4 +59,3 @@ app.post("/webhook", async (req, res) => {
 app.listen(port, () => {
   console.log(`Сервер запущен на http://localhost:${port}`);
 });
-
