@@ -32,16 +32,33 @@ app.post("/webhook", async (req, res) => {
       count: orderData.payment.amount,
       date: format(new Date(), "yyyy-MM-dd hh:mm"),
       email: orderData.ma_email,
-      id: orderData.payment.orderId,
+      id: orderData.payment.orderid,
       items: orderData.payment.products.map((p) => {
         if (p.options) {
+          const optionsString = p.options.reduce(
+            (accumulator, currentValue) => {
+              return (
+                accumulator +
+                `${currentValue.options.option}: ${currentValue.options.variant};`
+              );
+            },
+            ""
+          );
           // "Футболка Зимний ЗаХод 2024 (Размер: L) – 1x350 ≡ 350"
-          return `${p.name} (${p.options.option}: ${p.options.variant}) – ${p.quantity}x${p.price}=${p.amount};`;
+          return `${p.name} (${optionsString}) – ${p.quantity}x${p.price}=${p.amount};`;
         }
         // "Футболка Зимний ЗаХод 2024 – 1x350 ≡ 350"
         return `${p.name} – ${p.quantity}x${p.price}=${p.amount};`;
       }),
     };
+
+    console.log("Prepared transactionItem:", transactionItem); // Лог для проверки подготовленного объекта
+
+    // Проверим, все ли обязательные поля заполнены
+    if (!transactionItem.id) {
+      console.error("Order ID is undefined");
+      return res.status(400).send("Invalid order data, missing order ID");
+    }
 
     try {
       const docRef = await db.collection("transactions").add(transactionItem);
