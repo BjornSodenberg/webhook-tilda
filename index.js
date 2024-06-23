@@ -27,49 +27,42 @@ app.post("/webhook", async (req, res) => {
   // Проверка на данные { test: "test" }
   if (orderData.test === "test") {
     return res.status(200).send("Test data received");
-  } else {
-    const transactionItem = {
-      count: orderData.payment.amount,
-      date: format(new Date(), "yyyy-MM-dd hh:mm"),
-      email: orderData.ma_email,
-      id: orderData.payment.orderid,
-      items: orderData.payment.products.map((p) => {
+  }
+
+  const transactionItem = {
+    count: orderData.payment.amount,
+    date: format(new Date(), "yyyy-MM-dd HH:mm"),
+    email: orderData.ma_email,
+    id: orderData.payment.orderid,
+    items: orderData.payment.products
+      .map((p) => {
         if (p.options) {
-          const optionsString = p.options.reduce(
-            (accumulator, currentValue) => {
-              return (
-                accumulator +
-                `${currentValue.option}: ${currentValue.variant};`
-              );
-            },
-            ""
-          );
-          // "Футболка Зимний ЗаХод 2024 (Размер: L) – 1x350 ≡ 350"
+          const optionsString = p.options
+            .map((option) => `${option.option}: ${option.variant}`)
+            .join(", ");
           return `${p.name} (${optionsString}) – ${p.quantity}x${p.price}=${p.amount};`;
         }
-        // "Футболка Зимний ЗаХод 2024 – 1x350 ≡ 350"
         return `${p.name} – ${p.quantity}x${p.price}=${p.amount};`;
-      }),
-    };
+      })
+      .join(""),
+  };
 
-    console.log("Prepared transactionItem:", transactionItem); // Лог для проверки подготовленного объекта
+  console.log("Prepared transactionItem:", transactionItem);
 
-    // Проверим, все ли обязательные поля заполнены
-    if (!transactionItem.id) {
-      console.error("Order ID is undefined");
-      return res.status(400).send("Invalid order data, missing order ID");
-    }
+  if (!transactionItem.id) {
+    console.error("Order ID is undefined");
+    return res.status(400).send("Invalid order data, missing order ID");
+  }
 
-    try {
-      const docRef = await db.collection("transactions").add(transactionItem);
-      console.log("Добавлен заказ с ID:", docRef.id);
+  try {
+    const docRef = await db.collection("transactions").add(transactionItem);
+    console.log("Added order with ID:", docRef.id);
 
-      res.status(200).send("Заказ получен и сохранен успешно");
-    } catch (error) {
-      console.error("Ошибка при сохранении заказа:", error);
+    res.status(200).send("Order received and saved successfully");
+  } catch (error) {
+    console.error("Error saving order:", error);
 
-      res.status(500).send("Ошибка при сохранении заказа");
-    }
+    res.status(500).send("Error saving order");
   }
 });
 
