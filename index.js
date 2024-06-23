@@ -39,7 +39,7 @@ app.post("/webhook", async (req, res) => {
             (accumulator, currentValue) => {
               return (
                 accumulator +
-                `${currentValue.options.option}: ${currentValue.options.variant};`
+                `${currentValue.option}: ${currentValue.variant};`
               );
             },
             ""
