@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const admin = require("firebase-admin");
-const fns = require("date-fns");
+const { format } = require('date-fns');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -31,16 +31,16 @@ app.post("/webhook", async (req, res) => {
 
   const transactionItem = {
     count: orderData.payment.amount,
-    date: fns.format(new Date(Date.now(), "yyyy-MM-dd hh:mm")),
+    date: format(new Date(), "yyyy-MM-dd hh:mm"),
     email: orderData.ma_email,
     id: orderData.payment.orderId,
     items: orderData.payment.products.map((p) => {
       if (p.options) {
         // "Футболка Зимний ЗаХод 2024 (Размер: L) – 1x350 ≡ 350"
-        return `${p.name} (${p.options.option}: ${p.options.variant}) – ${p.quantity}X${p.price}=${p.amount};`;
+        return `${p.name} (${p.options.option}: ${p.options.variant}) – ${p.quantity}x${p.price}=${p.amount};`;
       }
       // "Футболка Зимний ЗаХод 2024 – 1x350 ≡ 350"
-      return `${p.name} – ${p.quantity}X${p.price}=${p.amount};`;
+      return `${p.name} – ${p.quantity}x${p.price}=${p.amount};`;
     }),
   };
 
