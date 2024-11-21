@@ -6,7 +6,16 @@ const { format } = require("date-fns");
 const app = express();
 const port = process.env.PORT || 3000;
 
-const serviceAccount = require("./serviceAccountKey.json");
+// const serviceAccount = require("./serviceAccountKey.json");
+// Получаем путь из переменной окружения
+const serviceAccountPath = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+
+let serviceAccount;
+if (serviceAccountPath) {
+  serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, "utf8"));
+} else {
+  throw new Error("GOOGLE_APPLICATION_CREDENTIALS не задана.");
+}
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
