@@ -12,7 +12,7 @@ const serviceAccountPath = process.env.GOOGLE_APPLICATION_CREDENTIALS;
 
 let serviceAccount;
 if (serviceAccountPath) {
-  serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, "utf8"));
+  serviceAccount = require(serviceAccountPath);
 } else {
   throw new Error("GOOGLE_APPLICATION_CREDENTIALS не задана.");
 }
