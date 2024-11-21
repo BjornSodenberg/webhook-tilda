@@ -13,4 +13,4 @@ services:
     environment:
       - PORT=3000
       - GOOGLE_APPLICATION_CREDENTIALS=/usr/src/app/serviceAccountKey.json
-    command: npm start
+    command: node index.js
