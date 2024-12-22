@@ -7,9 +7,15 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
+    networks:
+      - my_network
     environment:
       - PORT=3000
       - GOOGLE_APPLICATION_CREDENTIALS=/usr/src/app/serviceAccountKey.json
     volumes:
       - ./serviceAccountKey.json:/usr/src/app/serviceAccountKey.json
     command: node index.js
+
+networks:
+  my_network:
+    external: true
