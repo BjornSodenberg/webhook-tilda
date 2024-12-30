@@ -67,10 +67,21 @@ app.post("/webhook", async (req, res) => {
     const docRef = await db.collection("transactions").add(transactionItem);
     console.log("Added order with ID:", docRef.id);
 
+    // Then, send to Bank of Lemons API
+    const apiResponse = await axios.post(
+      'https://bankoflemons.ru/api/v1/orders/create',
+      transactionItem,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      }
+    );
+
+    console.log('Order sent to Bank of Lemons API:', apiResponse.data);
     res.status(200).send("Order received and saved successfully");
   } catch (error) {
-    console.error("Error saving order:", error);
-
+    console.error("Error processing order:", error);
     res.status(500).send("Error saving order");
   }
 });
