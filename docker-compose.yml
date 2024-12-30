@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   webhook:
+    container_name: webhook-tilda-webhook
     build:
       context: .
       dockerfile: Dockerfile
