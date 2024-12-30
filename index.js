@@ -37,7 +37,8 @@ const sendToApi = async (transactionItem) => {
     const response = await axios.post(API_URL, transactionItem, {
       headers: {
         'Content-Type': 'application/json',
-      }
+      },
+      httpsAgent: new (require('https').Agent)({rejectUnauthorized: false})
     });
     return { success: true, data: response.data };
   } catch (error) {
