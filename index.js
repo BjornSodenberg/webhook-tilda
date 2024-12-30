@@ -56,7 +56,13 @@ app.post("/webhook", async (req, res) => {
       .join(""),
   };
 
-  console.log("Prepared transactionItem:", transactionItem);
+  console.log("Prepared transactionItem:", {
+    date: transactionItem.date,
+    items: transactionItem.items,
+    email: transactionItem.email,
+    total: transactionItem.count,
+    id: transactionItem.id
+  });
 
   if (!transactionItem.id) {
     console.error("Order ID is undefined");
@@ -70,7 +76,13 @@ app.post("/webhook", async (req, res) => {
     // Then, send to Bank of Lemons API
     const apiResponse = await axios.post(
       'https://bankoflemons.ru/api/v1/orders/create',
-      transactionItem,
+      {
+        date: transactionItem.date,
+        items: transactionItem.items,
+        email: transactionItem.email,
+        total: transactionItem.count,
+        id: transactionItem.id
+      },
       {
         headers: {
           'Content-Type': 'application/json',
