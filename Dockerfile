@@ -1,17 +1,16 @@
 # Используем официальный образ Node.js
 FROM node:18
 
-# Устанавливаем git
-RUN apt-get update && apt-get install -y git && apt-get clean
+WORKDIR /app
 
-# Скачиваем репозиторий
-RUN git clone https://github.com/BjornSodenberg/webhook-tilda.git /usr/src/app
+COPY package.json yarn.lock ./
 
-# Устанавливаем рабочую директорию
-WORKDIR /usr/src/app
+RUN yarn install --frozen-lockfile
 
-# Устанавливаем зависимости
-RUN npm install
+RUN yarn cache clean
+
+
+COPY . .
 
 # Открываем порт
 EXPOSE 3000

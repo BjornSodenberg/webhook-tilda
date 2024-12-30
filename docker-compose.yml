@@ -15,7 +15,6 @@ services:
       - GOOGLE_APPLICATION_CREDENTIALS=/usr/src/app/serviceAccountKey.json
     volumes:
       - ./serviceAccountKey.json:/usr/src/app/serviceAccountKey.json
-    command: node index.js
 
 networks:
   my_network:
