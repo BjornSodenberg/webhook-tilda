@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3'
 
 services:
   webhook:
@@ -10,11 +10,6 @@ services:
       - "3000:3000"
     networks:
       - my_network
-    environment:
-      - PORT=3000
-      - GOOGLE_APPLICATION_CREDENTIALS=/usr/src/app/serviceAccountKey.json
-    volumes:
-      - ./serviceAccountKey.json:/usr/src/app/serviceAccountKey.json
 
 networks:
   my_network:

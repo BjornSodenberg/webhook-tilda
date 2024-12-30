@@ -9,7 +9,6 @@ RUN yarn install --frozen-lockfile
 
 RUN yarn cache clean
 
-
 COPY . .
 
 # Открываем порт
