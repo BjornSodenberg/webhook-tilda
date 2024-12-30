@@ -26,7 +26,7 @@ const formatProductLine = (product) => {
 
 const createTransactionItem = (orderData) => ({
   total: orderData.payment.amount,
-  date: format(new Date(), "yyyy-MM-dd HH:mm"),
+  date: format(new Date(), "dd.MM.yyyy"),
   email: orderData.ma_email,
   id: orderData.payment.orderid,
   items: orderData.payment.products.map(formatProductLine).join(""),
